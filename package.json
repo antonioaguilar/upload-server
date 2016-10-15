@@ -1,0 +1,34 @@
+{
+  "name": "upload-server",
+  "version": "1.0.0",
+  "description": "Simple file upload server",
+  "main": "index.js",
+  "preferGlobal": true,
+  "bin": {
+    "upload-server": "index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Antonio Aguilar <aaguilar@avaya.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.14.0",
+    "multer": "^1.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/antonioaguilar/upload-server.git"
+  },
+  "keywords": [
+    "file",
+    "upload",
+    "multipart",
+    "multi-form"
+  ],
+  "bugs": {
+    "url": "https://github.com/antonioaguilar/upload-server/issues"
+  },
+  "homepage": "https://github.com/antonioaguilar/upload-server#readme"
+}
