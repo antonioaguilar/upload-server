@@ -1,7 +1,7 @@
 {
   "name": "upload-server",
   "version": "1.0.0",
-  "description": "Simple file upload server",
+  "description": "Simple HTTP file upload server",
   "main": "index.js",
   "preferGlobal": true,
   "bin": {
@@ -11,7 +11,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
   },
-  "author": "Antonio Aguilar <aaguilar@avaya.com>",
+  "author": "Antonio Aguilar",
   "license": "MIT",
   "dependencies": {
     "express": "^4.14.0",
