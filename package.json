@@ -15,7 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.14.0",
-    "multer": "^1.2.0"
+    "multer": "^1.2.1"
   },
   "repository": {
     "type": "git",
