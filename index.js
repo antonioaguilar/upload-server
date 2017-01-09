@@ -5,6 +5,7 @@ var host = process.env.HOST || '0.0.0.0';
 var http_port = process.env.HTTP_PORT || 8090;
 var https_port = process.env.HTTPS_PORT || 8443;
 var folder = process.env.FOLDER || process.cwd() + '/uploads';
+var pem_folder = process.env.PEM_FOLDER || process.cwd() + '/';
 
 var fs = require('fs');
 var http = require('http');
@@ -13,8 +14,8 @@ var express = require('express');
 var multer = require('multer');
 var app = express();
 var options = {
-  key: fs.readFileSync('./key.pem'),
-  cert: fs.readFileSync('./cert.pem')
+  key: fs.readFileSync(pem_folder + 'key.pem'),
+  cert: fs.readFileSync(pem_folder + 'cert.pem')
 };
 
 fs.existsSync(folder) || fs.mkdirSync(folder);
