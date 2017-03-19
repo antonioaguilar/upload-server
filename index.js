@@ -13,10 +13,6 @@ var https = require('https');
 var express = require('express');
 var multer = require('multer');
 var app = express();
-var options = {
-  key: fs.readFileSync(pem_folder + 'key.pem'),
-  cert: fs.readFileSync(pem_folder + 'cert.pem')
-};
 
 fs.existsSync(folder) || fs.mkdirSync(folder);
 
@@ -48,6 +44,15 @@ app.post('/upload', upload.any(), function(req, res) {
 });
 
 if(args[0] === '--https') {
+  try {
+    var options = {
+      key: fs.readFileSync(pem_folder + 'key.pem'),
+      cert: fs.readFileSync(pem_folder + 'cert.pem')
+    };
+  } catch (e) {
+    console.error('Coud not find cert/key *.pem files in current folder');
+    return false;
+  }
   https.createServer(options, app).listen(https_port, host, function() {
     console.log('[' + new Date() + '] - HTTPS File Upload Server started on ' + host + ':' + https_port);
   });
