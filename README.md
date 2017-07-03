@@ -4,7 +4,7 @@ Simple file server with multipart/form-data and large file support
 
 ### Install 
 
-```
+```bash
 npm install -g upload-server
 ```
 
@@ -13,12 +13,13 @@ npm install -g upload-server
 ```
 upload-server --help
 
-File upload server v1.1.3
+File upload server v1.1.4
 
 usage: upload-server [options]
 
 options:
   -p --port    Port number (default: 8090)
+  -f --folder  Folder to upload files (default: files)
   -S --tls     Enable TLS / HTTPS
   -C --cert    Server certificate file
   -K --key     Private key file

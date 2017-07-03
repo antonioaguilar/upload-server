@@ -7,6 +7,7 @@ var http = require('http');
 var https = require('https');
 var express = require('express');
 var multer = require('multer');
+var html = require('./tpl');
 var pkg = require('./package.json');
 var serveIndex = require('serve-index');
 var argv = require('minimist')(process.argv.slice(2));
@@ -28,6 +29,7 @@ function _usage() {
     '',
     'options:',
     '  -p --port    Port number (default: 8090)',
+    '  -f --folder  Folder to upload files (default: files)',
     '  -S --tls     Enable TLS / HTTPS',
     '  -C --cert    Server certificate file',
     '  -K --key     Private key file',
@@ -51,7 +53,13 @@ if(version) {
   _version();
 }
 
-fs.existsSync(default_folder) || fs.mkdirSync(default_folder);
+console.log('[' + new Date().toISOString() + '] - File upload server v' + pkg.version);
+
+if(!fs.existsSync(default_folder)) {
+  fs.mkdirSync(default_folder);
+}
+
+console.log('[' + new Date().toISOString() + '] - Serving files from folder:', path.join(__dirname, default_folder));
 
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -75,7 +83,7 @@ app.use(function(req, res, next) {
 });
 
 app.get('/', function(req, res) {
-  res.send('<form action="/upload" method="POST" enctype="multipart/form-data">\n  <input type="file" name="file">\n  <input type="submit" value="Upload File">\n</form>\n');
+  res.send(html.template);
 });
 
 app.post('/', upload.any(), function(req, res) {
@@ -88,8 +96,6 @@ app.post('/upload', upload.any(), function(req, res) {
   res.redirect('/' + default_folder);
   res.end();
 });
-
-console.log('[' + new Date().toISOString() + '] - File upload server v' + pkg.version);
 
 if(tls_enabled && cert_file && key_file) {
   var options = { key: fs.readFileSync(key_file), cert: fs.readFileSync(cert_file) };
