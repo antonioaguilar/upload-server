@@ -10,10 +10,10 @@ npm install -g upload-server
 
 ### Usage
 
-```
+```bash
 upload-server --help
 
-File upload server v1.1.4
+File upload server v1.1.5
 
 usage: upload-server [options]
 

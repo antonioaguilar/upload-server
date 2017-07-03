@@ -59,7 +59,7 @@ if(!fs.existsSync(default_folder)) {
   fs.mkdirSync(default_folder);
 }
 
-console.log('[' + new Date().toISOString() + '] - Serving files from folder:', path.join(__dirname, default_folder));
+console.log('[' + new Date().toISOString() + '] - Serving files from folder:', process.cwd() + '/' + default_folder);
 
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
