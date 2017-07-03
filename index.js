@@ -73,8 +73,8 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
-app.use('/' + default_folder, serveIndex(path.join(__dirname, default_folder)));
-app.use('/' + default_folder, express.static(path.join(__dirname, default_folder)));
+app.use('/' + default_folder, serveIndex(process.cwd() + '/' + default_folder));
+app.use('/' + default_folder, express.static(process.cwd() + '/' + default_folder));
 
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
