@@ -1,24 +1,61 @@
 #!/usr/bin/env node
 
-var args = process.argv.slice(2);
-var host = process.env.HOST || '0.0.0.0';
-var http_port = process.env.HTTP_PORT || 8090;
-var https_port = process.env.HTTPS_PORT || 8443;
-var folder = process.env.FOLDER || process.cwd() + '/uploads';
-var pem_folder = process.env.PEM_FOLDER || process.cwd() + '/';
-
 var fs = require('fs');
+var ip = require('ip');
+var path = require('path');
 var http = require('http');
 var https = require('https');
 var express = require('express');
 var multer = require('multer');
+var pkg = require('./package.json');
+var serveIndex = require('serve-index');
+var argv = require('minimist')(process.argv.slice(2));
 var app = express();
 
-fs.existsSync(folder) || fs.mkdirSync(folder);
+var default_host = ip.address();
+var default_port = argv.p || argv.port || 8090;
+var default_folder = argv.f || argv.folder || 'files';
+var version = argv.v || argv.version;
+var tls_enabled = argv.S || argv.tls;
+var cert_file = argv.C || argv.cert;
+var key_file = argv.K || argv.key;
+var help = argv.h || argv.help;
+
+function _usage() {
+  console.log([
+    '', 'File upload server v' + pkg.version,
+    '', 'usage: upload-server [options]',
+    '',
+    'options:',
+    '  -p --port    Port number (default: 8090)',
+    '  -S --tls     Enable TLS / HTTPS',
+    '  -C --cert    Server certificate file',
+    '  -K --key     Private key file',
+    '  -h --help    Print this list and exit',
+    '  -v --version Print the current version',
+    ''
+  ].join('\n'));
+  process.exit();
+}
+
+function _version() {
+  console.log(pkg.version);
+  process.exit();
+}
+
+if(help) {
+  _usage();
+}
+
+if(version) {
+  _version();
+}
+
+fs.existsSync(default_folder) || fs.mkdirSync(default_folder);
 
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, folder);
+    cb(null, default_folder);
   },
   filename: function(req, file, cb) {
     var fieldName = 'file';
@@ -27,6 +64,9 @@ var storage = multer.diskStorage({
 });
 
 var upload = multer({ storage: storage });
+
+app.use('/' + default_folder, serveIndex(path.join(__dirname, default_folder)));
+app.use('/' + default_folder, express.static(path.join(__dirname, default_folder)));
 
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
@@ -38,27 +78,27 @@ app.get('/', function(req, res) {
   res.send('<form action="/upload" method="POST" enctype="multipart/form-data">\n  <input type="file" name="file">\n  <input type="submit" value="Upload File">\n</form>\n');
 });
 
-app.post('/upload', upload.any(), function(req, res) {
-  console.log('[' + new Date() + '] - File uploaded:', req.files[0].path);
+app.post('/', upload.any(), function(req, res) {
+  console.log('[' + new Date().toISOString() + '] - File uploaded:', req.files[0].path);
   res.end();
 });
 
-if(args[0] === '--https') {
-  try {
-    var options = {
-      key: fs.readFileSync(pem_folder + 'key.pem'),
-      cert: fs.readFileSync(pem_folder + 'cert.pem')
-    };
-  } catch (e) {
-    console.error('Coud not find cert/key *.pem files in current folder');
-    return false;
-  }
-  https.createServer(options, app).listen(https_port, host, function() {
-    console.log('[' + new Date() + '] - HTTPS File Upload Server started on ' + host + ':' + https_port);
+app.post('/upload', upload.any(), function(req, res) {
+  console.log('[' + new Date().toISOString() + '] - File uploaded:', req.files[0].path);
+  res.redirect('/' + default_folder);
+  res.end();
+});
+
+console.log('[' + new Date().toISOString() + '] - File upload server v' + pkg.version);
+
+if(tls_enabled && cert_file && key_file) {
+  var options = { key: fs.readFileSync(key_file), cert: fs.readFileSync(cert_file) };
+  https.createServer(options, app).listen(default_port, default_host, function() {
+    console.log('[' + new Date().toISOString() + '] - Server started on https://' + default_host + ':' + default_port);
   });
 }
 else {
-  http.createServer(app).listen(http_port, host, function() {
-    console.log('[' + new Date() + '] - HTTP File Upload Server started on ' + host + ':' + http_port);
+  http.createServer(app).listen(default_port, default_host, function() {
+    console.log('[' + new Date().toISOString() + '] - Server started on http://' + default_host + ':' + default_port);
   });
 }

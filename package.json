@@ -1,6 +1,6 @@
 {
   "name": "upload-server",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Simple HTTP file upload server",
   "main": "index.js",
   "preferGlobal": true,
@@ -15,7 +15,11 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.14.0",
-    "multer": "^1.2.1"
+    "express-directory": "0.0.2",
+    "ip": "^1.1.5",
+    "minimist": "^1.2.0",
+    "multer": "^1.2.1",
+    "serve-index": "^1.9.0"
   },
   "repository": {
     "type": "git",
