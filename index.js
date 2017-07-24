@@ -13,7 +13,7 @@ var serveIndex = require('serve-index');
 var argv = require('minimist')(process.argv.slice(2));
 var app = express();
 
-var default_host = ip.address();
+var default_host = argv.host || ip.address();
 var default_port = argv.p || argv.port || 8090;
 var default_folder = argv.f || argv.folder || 'files';
 var version = argv.v || argv.version;
@@ -29,6 +29,7 @@ function _usage() {
     '',
     'options:',
     '  -p --port    Port number (default: 8090)',
+    '  --host       hostname (default: IP address)',
     '  -f --folder  Folder to upload files (default: files)',
     '  -S --tls     Enable TLS / HTTPS',
     '  -C --cert    Server certificate file',
