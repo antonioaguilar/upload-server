@@ -43,7 +43,9 @@ function uploadFile(content, filename) {
     url: '//localhost:8090/',
     data: form,
     headers: { 'Content-Type': undefined }
-  }).then(function success(response) {}, function failure(error) {});
+  }).then(function success(response) {
+    console.log(response);
+  }, function failure(error) {});
 
 }
 ```
