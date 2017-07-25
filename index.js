@@ -90,7 +90,7 @@ app.get('/', function(req, res) {
 app.post('/', upload.any(), function(req, res) {
   console.log('[' + new Date().toISOString() + '] - File uploaded:', req.files[0].path);
   res.writeHead(200, {"Content-Type": "application/json"});
-  res.end(JSON.stringify({file: req.files[0].path}));
+  res.end(JSON.stringify({file: req.files[0].name}));
 });
 
 app.post('/upload', upload.any(), function(req, res) {
