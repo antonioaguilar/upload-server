@@ -13,7 +13,7 @@ npm install -g upload-server
 ```bash
 upload-server --help
 
-File upload server v1.1.5
+File upload server v1.1.7
 
 usage: upload-server [options]
 
@@ -43,7 +43,9 @@ function uploadFile(content, filename) {
     url: '//localhost:8090/',
     data: form,
     headers: { 'Content-Type': undefined }
-  }).then(function success(response) {}, function failure(error) {});
+  }).then(function success(response) {
+    console.log(response);
+  }, function failure(error) {});
 
 }
 ```
